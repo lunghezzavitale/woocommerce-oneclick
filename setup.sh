@@ -41,17 +41,18 @@ if ! wp core is-installed --allow-root 2>/dev/null; then
       --allow-root
 
     echo "WordPress installed successfully!"
-
-  # Set permalink structure to post name (required for WooCommerce)
-  echo "Setting permalink structure..."
-  wp rewrite structure '/%postname%/' --allow-root
-  wp rewrite flush --allow-root
-
-  # Remove default plugins (keep only next-revalidate)
-  echo "Removing default plugins..."
-  wp plugin delete akismet --allow-root 2>/dev/null || true
-  wp plugin delete hello --allow-root 2>/dev/null || true
+  fi
 fi
+
+# Set permalink structure to post name (required for WooCommerce)
+echo "Setting permalink structure..."
+wp rewrite structure '/%postname%/' --allow-root
+wp rewrite flush --allow-root
+
+# Remove default plugins (keep only next-revalidate)
+echo "Removing default plugins..."
+wp plugin delete akismet --allow-root 2>/dev/null || true
+wp plugin delete hello --allow-root 2>/dev/null || true
 
 # Install and activate WooCommerce
 if ! wp plugin is-active woocommerce --allow-root 2>/dev/null; then
@@ -100,19 +101,18 @@ if [ -n "${WOOCOMMERCE_STORE_COUNTRY}" ]; then
   echo "WooCommerce setup wizard disabled!"
 fi
 
+# Install and activate wc-smooth-generator plugin if not already active
+if ! wp plugin is-active wc-smooth-generator --allow-root 2>/dev/null; then
+  if ! wp plugin is-installed wc-smooth-generator --allow-root 2>/dev/null; then
+    echo "Installing wc-smooth-generator plugin from GitHub..."
+    wp plugin install https://github.com/woocommerce/wc-smooth-generator/releases/latest/download/wc-smooth-generator.zip --allow-root
+  fi
+  echo "Activating wc-smooth-generator plugin..."
+  wp plugin activate wc-smooth-generator --allow-root
+fi
+
 # Generate fake WooCommerce data if enabled
 if [ "${WOOCOMMERCE_GENERATE_DATA}" = "true" ]; then
-
-# Install and activate wc-smooth-generator plugin if not already active
-  if ! wp plugin is-active wc-smooth-generator --allow-root 2>/dev/null; then
-    if ! wp plugin is-installed wc-smooth-generator --allow-root 2>/dev/null; then
-      echo "Installing wc-smooth-generator plugin from GitHub..."
-      wp plugin install https://github.com/woocommerce/wc-smooth-generator/releases/latest/download/wc-smooth-generator.zip --allow-root
-    fi
-    echo "Activating wc-smooth-generator plugin..."
-    wp plugin activate wc-smooth-generator --allow-root
-  fi
-
   echo "Generating fake WooCommerce data..."
   
   # Generate hierarchical product categories
