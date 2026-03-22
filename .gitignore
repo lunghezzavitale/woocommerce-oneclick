@@ -1,9 +1,5 @@
 # Local development
-docker-compose.yml
 .env
-
-# Documentation (in progress)
-README.md
 
 # WordPress files (generated at runtime)
 wordpress/

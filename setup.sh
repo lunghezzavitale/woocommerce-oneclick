@@ -113,24 +113,30 @@ fi
 
 # Generate fake WooCommerce data if enabled
 if [ "${WOOCOMMERCE_GENERATE_DATA}" = "true" ]; then
-  echo "Generating fake WooCommerce data..."
-  
-  # Generate hierarchical product categories
-  wp wc generate terms product_cat 50 --max-depth=3 --allow-root
-  
-  # Generate products (simple and variable)
-  echo "Generating 50 products..."
-  wp wc generate products 50 --use-existing-terms --allow-root
-  
-  # Generate customers
-  echo "Generating 20 customers..."
-  wp wc generate customers 20 --allow-root
-  
-  # Generate orders
-  echo "Generating 30 orders..."
-  wp wc generate orders 30 --allow-root
-  
-  echo "Fake data generation complete!"
+  # Only generate if products don't exist yet
+  PRODUCT_COUNT=$(wp post list --post_type=product --format=count --allow-root 2>/dev/null || echo "0")
+  if [ "$PRODUCT_COUNT" -eq "0" ]; then
+    echo "Generating fake WooCommerce data..."
+    
+    # Generate hierarchical product categories
+    wp wc generate terms product_cat 50 --max-depth=3 --allow-root
+    
+    # Generate products (simple and variable)
+    echo "Generating 50 products..."
+    wp wc generate products 50 --use-existing-terms --allow-root
+    
+    # Generate customers
+    echo "Generating 20 customers..."
+    wp wc generate customers 20 --allow-root
+    
+    # Generate orders
+    echo "Generating 30 orders..."
+    wp wc generate orders 30 --allow-root
+    
+    echo "Fake data generation complete!"
+  else
+    echo "Products already exist ($PRODUCT_COUNT found), skipping data generation."
+  fi
 else
   echo "Fake data generation disabled (WOOCOMMERCE_GENERATE_DATA != true)."
 fi

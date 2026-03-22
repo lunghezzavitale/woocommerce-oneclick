@@ -4,11 +4,11 @@ A one-click WooCommerce deployment with automated setup, optional test data gene
 
 ## About Hosting WooCommerce on Railway
 
-This template deploys a complete WooCommerce stack: a MySQL database, WordPress with WooCommerce pre-installed, and automated configuration. WordPress auto-installs on first deployment with WooCommerce activated and ready to use. The included wc-smooth-generator plugin can optionally create realistic test products, customers, and orders for development and demo purposes. Environment variables are pre-configured to connect the database and skip manual setup wizards.
+This template deploys a complete WooCommerce stack: a MySQL database, WordPress with WooCommerce pre-installed, and automated configuration. WordPress auto-installs on first deployment with WooCommerce activated and ready to use. The included wc-smooth-generator plugin can optionally create realistic test products, customers, and orders for development and demo purposes. Environment variables can be pre-configured to connect the database and skip manual setup wizards.
 
 ## Common Use Cases
 
-- E-commerce stores needing a fast, managed WordPress hosting solution
+- E-commerce stores needing a fast, managed WooCommerce hosting solution
 - Development and staging environments with automated test data
 - WooCommerce headless backends for modern frontends (Next.js, React, etc.)
 - Agencies deploying client stores with pre-configured settings
@@ -24,15 +24,16 @@ This template deploys a complete WooCommerce stack: a MySQL database, WordPress 
 - [WooCommerce Plugin](https://woocommerce.com/)
 - [WC Smooth Generator](https://github.com/woocommerce/wc-smooth-generator)
 - [WooCommerce Storefront Theme](https://github.com/woocommerce/storefront)
+- [MariaDB](https://mariadb.org/)
 
 ### Implementation Details
 
 After deployment, WordPress and WooCommerce auto-install based on the minimal configuration steps below. The database and persistent volume are automatically provisioned.
 
 **Configuring WordPress**
-For the install to work correctly, you must set these required environment variables in Railway when deploying:
+You must set these required environment variables in Railway when deploying:
    - `WORDPRESS_ADMIN_USER` - Admin username (avoid "admin" for security)
-   - `WORDPRESS_ADMIN_PASSWORD` - Your secure admin password (20+ chars)
+   - `WORDPRESS_ADMIN_PASSWORD` - Your secure admin password (make it secure)
    - `WORDPRESS_ADMIN_EMAIL` - Your admin email address
 
 **Configuring WooCommerce (Optional)**
@@ -54,6 +55,6 @@ For further details, you can refer to the step-by-step guide: [How to Deploy Woo
 
 
 ## Why Deploy WooCommerce on Railway?
-Railway simplifies WooCommerce hosting by eliminating infrastructure complexity. Deploy a complete e-commerce stack with one-click, minimal configuration, no database setup and no volume management. Railway handles provisioning, scaling, and networking automatically while you focus on building your store.
+Railway is a singular platform to deploy your infrastructure stack. Railway will host your infrastructure so you don't have to deal with configuration, while allowing you to vertically and horizontally scale it.
 
-This template gives you a production-ready WooCommerce installation in minutes instead of hours. Automatic HTTPS, persistent storage, and database backups are included. Whether you're running a storefront, building a headless commerce backend, or creating demo environments with test data, Railway provides the infrastructure so you can focus on your products and customers.
+By deploying WooCommerce on Railway, you are one step closer to supporting a complete full-stack application with minimal burden. Host your servers, databases, AI agents, and more on Railway.
