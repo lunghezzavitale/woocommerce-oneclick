@@ -1,22 +1,33 @@
 #!/bin/bash
 
-# Run setup script after WordPress is ready
+echo "Fixing WordPress filesystem permissions..."
+
+mkdir -p \
+    /var/www/html/wp-content/plugins \
+    /var/www/html/wp-content/themes \
+    /var/www/html/wp-content/uploads \
+    /var/www/html/wp-content/upgrade
+
+chown -R www-data:www-data /var/www/html/wp-content
+chmod 755 /var/www/html/wp-content
+chmod 755 /var/www/html/wp-content/plugins
+chmod 755 /var/www/html/wp-content/themes
+chmod 755 /var/www/html/wp-content/uploads
+chmod 755 /var/www/html/wp-content/upgrade
+
 run_setup() {
-    # Wait for WordPress files to be ready
     while [ ! -d /var/www/html/wp-content/plugins ]; do
         sleep 2
     done
 
-    # Run the setup script
     /usr/local/bin/setup-wordpress.sh
+
+    echo "Repairing ownership after WP-CLI setup..."
+    chown -R www-data:www-data /var/www/html/wp-content
 }
 
-# Write a static health check file that Apache serves directly,
-# bypassing WordPress routing/redirects so Railway's healthcheck always gets a 200.
 echo "OK" > /var/www/html/healthz.html
 
-# Run setup in background after a delay
 (sleep 10 && run_setup) &
 
-# Run the original WordPress entrypoint
 exec docker-entrypoint.sh "$@"
