@@ -11,6 +11,10 @@ run_setup() {
     /usr/local/bin/setup-wordpress.sh
 }
 
+# Write a static health check file that Apache serves directly,
+# bypassing WordPress routing/redirects so Railway's healthcheck always gets a 200.
+echo "OK" > /var/www/html/healthz.html
+
 # Run setup in background after a delay
 (sleep 10 && run_setup) &
 
