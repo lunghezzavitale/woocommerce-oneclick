@@ -30,7 +30,7 @@ if ! wp core is-installed --allow-root 2>/dev/null; then
     exit 0
   else
     echo "Installing WordPress..."
-    
+
     wp core install \
       --url="${WORDPRESS_URL:-http://localhost}" \
       --title="${WORDPRESS_TITLE:-My WooCommerce Site}" \
@@ -42,6 +42,15 @@ if ! wp core is-installed --allow-root 2>/dev/null; then
 
     echo "WordPress installed successfully!"
   fi
+fi
+
+# Keep siteurl/home in sync with WORDPRESS_URL on every start, even after WordPress
+# is already installed, so redeploys against a persisted volume don't end up serving
+# a stale site URL and triggering permanent redirects on the healthcheck path.
+if [ -n "${WORDPRESS_URL}" ]; then
+  echo "Syncing WordPress site URL to ${WORDPRESS_URL}..."
+  wp option update siteurl "${WORDPRESS_URL}" --allow-root
+  wp option update home "${WORDPRESS_URL}" --allow-root
 fi
 
 # Set permalink structure to post name (required for WooCommerce)
